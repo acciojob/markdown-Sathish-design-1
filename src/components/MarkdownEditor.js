@@ -1,24 +1,38 @@
-import React, { useState } from "react";
-import { marked } from "marked";
+import React, { useState, useEffect } from 'react';
+import marked from 'marked'; // You will need to install this package for Markdown conversion
 
-function MarkdownEditor() {
-  const [text, setText] = useState("# Hello World");
+const MarkdownEditor = () => {
+    const [markdownText, setMarkdownText] = useState('');
+    const [previewText, setPreviewText] = useState('');
 
-  return (
-    <div className="container">
-      <textarea
-        className="editor"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Write Markdown here..."
-      />
+    // Update the preview text whenever markdownText changes
+    useEffect(() => {
+        setPreviewText(marked(markdownText)); // Convert Markdown to HTML
+    }, [markdownText]);
 
-      <div
-        className="preview"
-        dangerouslySetInnerHTML={{ __html: marked(text) }}
-      />
-    </div>
-  );
-}
+    const handleChange = (event) => {
+        setMarkdownText(event.target.value); // Update markdownText state
+    };
+
+    return (
+        <div className="app">
+            <div className="input-area">
+                <textarea
+                    className="textarea"
+                    value={markdownText}
+                    onChange={handleChange}
+                    placeholder="Enter Markdown text here..."
+                />
+            </div>
+            <div className="preview-area">
+                <h2>Preview</h2>
+                <div
+                    className="preview"
+                    dangerouslySetInnerHTML={{ __html: previewText }}
+                />
+            </div>
+        </div>
+    );
+};
 
 export default MarkdownEditor;
